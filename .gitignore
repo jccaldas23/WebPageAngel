@@ -1,0 +1,21 @@
+# Entornos virtuales
+venv/
+env/
+.env
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Node / Angular
+node_modules/
+dist/
+
+# IDEs
+.vscode/
+.idea/
+
+# Mac
+.DS_Store
