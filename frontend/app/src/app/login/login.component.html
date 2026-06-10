@@ -1,0 +1,40 @@
+<div class="min-h-screen bg-tierra-900 flex items-center justify-center px-4 relative overflow-hidden">
+
+  <div class="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full border border-tierra-700 opacity-30"></div>
+  <div class="absolute bottom-[-100px] left-[-100px] w-96 h-96 rounded-full border border-tierra-700 opacity-20"></div>
+  <div class="absolute top-0 left-16 w-px h-full bg-tierra-700 opacity-25"></div>
+  <p class="absolute bottom-6 right-8 font-serif text-8xl text-tierra-800 leading-none select-none">2025</p>
+
+  <div class="relative z-10 w-full max-w-sm bg-tierra-50 rounded-2xl p-10">
+
+    <p class="text-xs tracking-widest text-tierra-400 uppercase mb-3">Private Access</p>
+    <h1 class="font-serif text-3xl text-tierra-900 leading-tight mb-2">Our 1st Year<br>Together</h1>
+    <p class="text-sm text-tierra-400 mb-6"></p>
+    <div class="w-10 h-0.5 bg-tierra-300 mb-6 rounded"></div>
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Username</label>
+    <input
+      type="text"
+      [(ngModel)]="usuario"
+      placeholder="Your Name"
+      class="w-full bg-white border border-tierra-200 rounded-lg px-4 py-3 text-sm text-tierra-900 placeholder-tierra-300 focus:outline-none focus:border-tierra-400 mb-5"
+    />
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Password</label>
+    <input
+      type="password"
+      [(ngModel)]="contrasena"
+      placeholder="••••••••"
+      class="w-full bg-white border border-tierra-200 rounded-lg px-4 py-3 text-sm text-tierra-900 placeholder-tierra-300 focus:outline-none focus:border-tierra-400 mb-6"
+    />
+
+    <button
+      (click)="login()"
+      class="w-full bg-tierra-900 text-tierra-50 rounded-lg py-3 text-xs tracking-widest uppercase font-serif hover:bg-tierra-800 transition-colors">
+      Login
+    </button>
+
+    <p *ngIf="error" class="text-red-400 text-xs text-center mt-4">{{ error }}</p>
+
+  </div>
+</div>
