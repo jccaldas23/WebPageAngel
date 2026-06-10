@@ -1,38 +1,86 @@
 <div class="min-h-screen bg-tierra-900 px-6 py-10">
-
   <div class="max-w-3xl mx-auto">
 
+    <!-- Header -->
     <div class="flex justify-between items-end mb-12">
       <div>
-        <p class="text-xs tracking-widest text-tierra-400 uppercase mb-2">Our Moments</p>
+        <p class="text-xs tracking-widest text-tierra-400 uppercase mb-2">Nuestros momentos</p>
         <h1 class="font-serif text-4xl text-tierra-50">Our 1st Year<br>Together</h1>
       </div>
-      <button (click)="logout()" class="text-xs tracking-widest text-tierra-500 uppercase hover:text-tierra-300 transition-colors">
-        Logout
-      </button>
+      <div class="flex gap-4 items-center">
+        <button (click)="mostrarFormulario = true" class="text-xs tracking-widest text-tierra-300 uppercase hover:text-tierra-100 transition-colors">
+          + Agregar
+        </button>
+        <button (click)="logout()" class="text-xs tracking-widest text-tierra-500 uppercase hover:text-tierra-300 transition-colors">
+          Salir
+        </button>
+      </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <!-- Grid de momentos -->
+    <div *ngIf="momentos.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div
         *ngFor="let momento of momentos"
         (click)="abrirMomento(momento)"
-        class="cursor-pointer rounded-2xl overflow-hidden aspect-square flex flex-col justify-end p-4 relative group"
-        [ngClass]="momento.color">
-        <div class="absolute inset-0 bg-tierra-900 opacity-0 group-hover:opacity-20 transition-opacity rounded-2xl"></div>
-        <p class="text-xs text-tierra-600 mb-1">{{ momento.fecha }}</p>
-        <p class="font-serif text-tierra-800 text-lg leading-tight">{{ momento.titulo }}</p>
+        class="cursor-pointer rounded-2xl overflow-hidden aspect-square flex flex-col justify-end p-4 relative group bg-tierra-200">
+        <img *ngIf="momento.imagen" [src]="'http://localhost:5000' + momento.imagen" class="absolute inset-0 w-full h-full object-cover rounded-2xl"/>
+        <div class="absolute inset-0 bg-tierra-900 opacity-20 group-hover:opacity-40 transition-opacity rounded-2xl"></div>
+        <div class="relative z-10">
+          <p class="text-xs text-tierra-100 mb-1">{{ momento.fecha }}</p>
+          <p class="font-serif text-tierra-50 text-lg leading-tight">{{ momento.titulo }}</p>
+        </div>
       </div>
+    </div>
+
+    <!-- Sin momentos -->
+    <div *ngIf="momentos.length === 0" class="text-center py-24">
+      <p class="font-serif text-tierra-600 text-2xl mb-2">Aún no hay momentos</p>
+      <p class="text-tierra-500 text-sm">Agrega el primero ✨</p>
     </div>
 
   </div>
 </div>
 
+<!-- Modal detalle -->
 <div *ngIf="momentoSeleccionado" class="fixed inset-0 bg-tierra-900 bg-opacity-80 flex items-center justify-center px-4 z-50">
   <div class="bg-tierra-50 rounded-2xl p-8 max-w-md w-full relative">
     <button (click)="cerrarMomento()" class="absolute top-4 right-4 text-tierra-400 hover:text-tierra-700 text-xl">✕</button>
     <p class="text-xs tracking-widest text-tierra-400 uppercase mb-1">{{ momentoSeleccionado.fecha }}</p>
     <h2 class="font-serif text-2xl text-tierra-900 mb-4">{{ momentoSeleccionado.titulo }}</h2>
-    <div class="w-full aspect-video rounded-xl mb-4" [ngClass]="momentoSeleccionado.color"></div>
+    <img *ngIf="momentoSeleccionado.imagen" [src]="'http://localhost:5000' + momentoSeleccionado.imagen" class="w-full aspect-video object-cover rounded-xl mb-4"/>
+    <div *ngIf="!momentoSeleccionado.imagen" class="w-full aspect-video bg-tierra-200 rounded-xl mb-4"></div>
     <p class="text-sm text-tierra-600 leading-relaxed">{{ momentoSeleccionado.descripcion }}</p>
+    <button (click)="eliminarMomento(momentoSeleccionado.id)" class="mt-6 text-xs tracking-widest text-red-400 uppercase hover:text-red-600 transition-colors">
+      Eliminar momento
+    </button>
+  </div>
+</div>
+
+<!-- Modal agregar -->
+<div *ngIf="mostrarFormulario" class="fixed inset-0 bg-tierra-900 bg-opacity-80 flex items-center justify-center px-4 z-50">
+  <div class="bg-tierra-50 rounded-2xl p-8 max-w-md w-full relative">
+    <button (click)="mostrarFormulario = false" class="absolute top-4 right-4 text-tierra-400 hover:text-tierra-700 text-xl">✕</button>
+    <h2 class="font-serif text-2xl text-tierra-900 mb-6">Nuevo momento</h2>
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Título</label>
+    <input [(ngModel)]="nuevoTitulo" type="text" placeholder="¿Qué fue este momento?"
+      class="w-full bg-white border border-tierra-200 rounded-lg px-4 py-3 text-sm text-tierra-900 mb-4 focus:outline-none focus:border-tierra-400"/>
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Descripción</label>
+    <textarea [(ngModel)]="nuevoDescripcion" placeholder="Cuéntalo..."
+      class="w-full bg-white border border-tierra-200 rounded-lg px-4 py-3 text-sm text-tierra-900 mb-4 focus:outline-none focus:border-tierra-400 resize-none h-24"></textarea>
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Fecha (opcional)</label>
+    <input [(ngModel)]="nuevoFecha" type="text" placeholder="Ej: Marzo 2025"
+      class="w-full bg-white border border-tierra-200 rounded-lg px-4 py-3 text-sm text-tierra-900 mb-4 focus:outline-none focus:border-tierra-400"/>
+
+    <label class="block text-xs tracking-widest text-tierra-400 uppercase mb-2">Foto</label>
+    <input (change)="onFileChange($event)" type="file" accept="image/*"
+      class="w-full text-sm text-tierra-500 mb-6"/>
+
+    <button (click)="agregarMomento()"
+      class="w-full bg-tierra-900 text-tierra-50 rounded-lg py-3 text-xs tracking-widest uppercase font-serif hover:bg-tierra-800 transition-colors">
+      Guardar momento
+    </button>
   </div>
 </div>

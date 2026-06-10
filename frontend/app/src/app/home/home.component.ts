@@ -1,32 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-interface Momento {
-  id: number;
-  titulo: string;
-  descripcion: string;
-  fecha?: string;
-  imagen: string;
-  color: string;
-}
+import { MomentosService, Momento } from '../momentos.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  momentos: Momento[] = [];
   momentoSeleccionado: Momento | null = null;
+  mostrarFormulario = false;
 
-  momentos: Momento[] = [
-    { id: 1, titulo: 'Primer día juntos', descripcion: 'El día que todo empezó...', fecha: 'Enero 2025', imagen: '', color: 'bg-tierra-200' },
-    { id: 2, titulo: 'Viaje a la costa', descripcion: 'El mar, el sol y tú.', fecha: 'Marzo 2025', imagen: '', color: 'bg-tierra-300' },
-    { id: 3, titulo: 'Cumpleaños', descripcion: 'Un día especial para celebrarte.', fecha: 'Mayo 2025', imagen: '', color: 'bg-tierra-200' },
-    { id: 4, titulo: 'Senderismo', descripcion: 'Subimos alto, juntos.', fecha: 'Julio 2025', imagen: '', color: 'bg-tierra-300' },
-    { id: 5, titulo: 'Noche de películas', descripcion: 'Palomitas y mucha risa.', fecha: 'Septiembre 2025', imagen: '', color: 'bg-tierra-200' },
-  ];
+  nuevoTitulo = '';
+  nuevoDescripcion = '';
+  nuevoFecha = '';
+  nuevaImagen: File | null = null;
+
+  constructor(private momentosService: MomentosService, private router: Router) {}
+
+  ngOnInit() {
+    this.cargarMomentos();
+  }
+
+  cargarMomentos() {
+    this.momentosService.getMomentos().subscribe(data => {
+      this.momentos = data;
+    });
+  }
 
   abrirMomento(momento: Momento) {
     this.momentoSeleccionado = momento;
@@ -36,10 +40,38 @@ export class HomeComponent {
     this.momentoSeleccionado = null;
   }
 
+  onFileChange(event: any) {
+    this.nuevaImagen = event.target.files[0];
+  }
+
+  agregarMomento() {
+    const formData = new FormData();
+    formData.append('titulo', this.nuevoTitulo);
+    formData.append('descripcion', this.nuevoDescripcion);
+    formData.append('fecha', this.nuevoFecha);
+    if (this.nuevaImagen) {
+      formData.append('imagen', this.nuevaImagen);
+    }
+
+    this.momentosService.crearMomento(formData).subscribe(() => {
+      this.cargarMomentos();
+      this.mostrarFormulario = false;
+      this.nuevoTitulo = '';
+      this.nuevoDescripcion = '';
+      this.nuevoFecha = '';
+      this.nuevaImagen = null;
+    });
+  }
+
+  eliminarMomento(id: string) {
+    this.momentosService.eliminarMomento(id).subscribe(() => {
+      this.cargarMomentos();
+      this.momentoSeleccionado = null;
+    });
+  }
+
   logout() {
     localStorage.removeItem('loggedIn');
     this.router.navigate(['/login']);
   }
-
-  constructor(private router: Router) {}
 }
