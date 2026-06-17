@@ -11,7 +11,7 @@ export interface Momento {
 
 @Injectable({ providedIn: 'root' })
 export class MomentosService {
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = 'https://webpageangel-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
