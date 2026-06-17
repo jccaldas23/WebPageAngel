@@ -23,7 +23,7 @@
         *ngFor="let momento of momentos"
         (click)="abrirMomento(momento)"
         class="cursor-pointer rounded-2xl overflow-hidden aspect-square flex flex-col justify-end p-4 relative group bg-tierra-200">
-        <img *ngIf="momento.imagen" [src]="'http://localhost:5000' + momento.imagen" class="absolute inset-0 w-full h-full object-cover rounded-2xl"/>
+        <img *ngIf="momento.imagen" [src]="'https://webpageangel-backend.onrender.com' + momento.imagen" class="absolute inset-0 w-full h-full object-cover rounded-2xl"/>
         <div class="absolute inset-0 bg-tierra-900 opacity-20 group-hover:opacity-40 transition-opacity rounded-2xl"></div>
         <div class="relative z-10">
           <p class="text-xs text-tierra-100 mb-1">{{ momento.fecha }}</p>
@@ -53,7 +53,7 @@
     <button (click)="cerrarMomento()" class="absolute top-4 right-4 text-tierra-400 hover:text-tierra-700 text-xl">✕</button>
     <p class="text-xs tracking-widest text-tierra-400 uppercase mb-1">{{ momentoSeleccionado.fecha }}</p>
     <h2 class="font-serif text-2xl text-tierra-900 mb-4">{{ momentoSeleccionado.titulo }}</h2>
-    <img *ngIf="momentoSeleccionado.imagen" [src]="'http://localhost:5000' + momentoSeleccionado.imagen" class="w-full aspect-video object-cover rounded-xl mb-4"/>
+    <img *ngIf="momentoSeleccionado.imagen" [src]="'https://webpageangel-backend.onrender.com' + momentoSeleccionado.imagen" class="w-full aspect-video object-cover rounded-xl mb-4"/>
     <div *ngIf="!momentoSeleccionado.imagen" class="w-full aspect-video bg-tierra-200 rounded-xl mb-4"></div>
     <p class="text-sm text-tierra-600 leading-relaxed">{{ momentoSeleccionado.descripcion }}</p>
     <button (click)="eliminarMomento(momentoSeleccionado.id)" class="mt-6 text-xs tracking-widest text-red-400 uppercase hover:text-red-600 transition-colors">
